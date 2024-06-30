@@ -1,0 +1,60 @@
+version: 1
+frontend:
+  phases:
+    # Build
+    build:
+      commands:
+        - npm install
+        - npm run build
+  artifacts:
+    # Files to be uploaded to S3
+    baseDirectory: .next
+    files:
+      - '**/*'
+  cache:
+    # Caching settings for build assets
+    paths:
+      - node_modules/**/*
+
+backend:
+  phases:
+    # Functions deployment
+    build:
+      commands:
+        - amplify function build
+    # Data storage setup
+    create:
+      # Setup DynamoDB table
+      - resourceName: nexttable
+        service: DynamoDB
+        config:
+          TableName: nexttable
+          PartitionKeyName: id
+          PartitionKeyType: STRING
+    # Data model updates
+    update:
+      - resourceName: nexttable
+        service: DynamoDB
+        config:
+          TableName: nexttable
+          PartitionKeyName: id
+          PartitionKeyType: STRING
+
+# If using environment variables or different backend environments, define them here
+# env:
+#   variables:
+#     key: value
+
+# If using hosting, define hosting details here
+# frontend:
+#   hosting:    
+#     myNextjsApp:
+#       customHeaders:
+#         - pattern: '**/*.html'
+#           headers:
+#             - key: Content-Type
+#               value: text/html; charset=utf-8
+#       redirects:
+#         - source: /about
+#           target: /about.html
+#           status: 200
