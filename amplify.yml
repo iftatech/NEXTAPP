@@ -29,7 +29,7 @@ backend:
         service: DynamoDB
         config:
           TableName: nexttable
-          PartitionKeyName: id
+          PartitionKeyName: nexttablekey
           PartitionKeyType: STRING
     # Data model updates
     update:
@@ -37,7 +37,7 @@ backend:
         service: DynamoDB
         config:
           TableName: nexttable
-          PartitionKeyName: id
+          PartitionKeyName: nexttablekey
           PartitionKeyType: STRING
 
 # If using environment variables or different backend environments, define them here
